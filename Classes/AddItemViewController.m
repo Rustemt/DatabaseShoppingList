@@ -55,6 +55,7 @@
 #pragma mark -
 #pragma mark textField delegate methods.
 // optional method.  Dismiss keyboard when user presses Return
+// both textFields use this method
 // Ref Dudney sec 4.6 pg 67
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     [textField resignFirstResponder];
