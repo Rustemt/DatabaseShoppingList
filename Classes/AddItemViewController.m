@@ -7,6 +7,7 @@
 //
 
 #import "AddItemViewController.h"
+#include <sqlite3.h>
 
 
 @implementation AddItemViewController

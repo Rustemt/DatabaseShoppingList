@@ -7,7 +7,7 @@
 //
 
 #import "ListByPriceViewController.h"
-
+#include <sqlite3.h>
 
 @implementation ListByPriceViewController
 

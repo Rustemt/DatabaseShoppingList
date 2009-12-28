@@ -18,6 +18,8 @@
 		DE4C173710E96E360034EF25 /* ListByPriceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE4C173610E96E360034EF25 /* ListByPriceViewController.m */; };
 		DE6A8A4E10E96076000C3860 /* listbyprice.png in Resources */ = {isa = PBXBuildFile; fileRef = DE6A8A4D10E96076000C3860 /* listbyprice.png */; };
 		DE6A8A5010E96082000C3860 /* add.png in Resources */ = {isa = PBXBuildFile; fileRef = DE6A8A4F10E96082000C3860 /* add.png */; };
+		DEB026D910E9711600514F6F /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DEB026D810E9711600514F6F /* libsqlite3.dylib */; };
+		DEB026DB10E972BB00514F6F /* shopping.db in Resources */ = {isa = PBXBuildFile; fileRef = DEB026DA10E972BB00514F6F /* shopping.db */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +40,8 @@
 		DE4C173610E96E360034EF25 /* ListByPriceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListByPriceViewController.m; sourceTree = "<group>"; };
 		DE6A8A4D10E96076000C3860 /* listbyprice.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = listbyprice.png; sourceTree = "<group>"; };
 		DE6A8A4F10E96082000C3860 /* add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add.png; sourceTree = "<group>"; };
+		DEB026D810E9711600514F6F /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		DEB026DA10E972BB00514F6F /* shopping.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = shopping.db; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,6 +52,7 @@
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				288765080DF74369002DB57D /* CoreGraphics.framework in Frameworks */,
+				DEB026D910E9711600514F6F /* libsqlite3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,6 +88,7 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				DEB026D810E9711600514F6F /* libsqlite3.dylib */,
 			);
 			name = DatabaseShoppingList;
 			sourceTree = "<group>";
@@ -99,6 +105,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				DEB026DA10E972BB00514F6F /* shopping.db */,
 				DE6A8A4F10E96082000C3860 /* add.png */,
 				DE6A8A4D10E96076000C3860 /* listbyprice.png */,
 				282CCBFD0DB6C98000C4EA27 /* ListByPriceView.xib */,
@@ -164,6 +171,7 @@
 				282CCBFE0DB6C98000C4EA27 /* ListByPriceView.xib in Resources */,
 				DE6A8A4E10E96076000C3860 /* listbyprice.png in Resources */,
 				DE6A8A5010E96082000C3860 /* add.png in Resources */,
+				DEB026DB10E972BB00514F6F /* shopping.db in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
