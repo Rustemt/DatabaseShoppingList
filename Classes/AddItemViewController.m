@@ -1,15 +1,15 @@
 //
-//  FirstViewController.m
+//  AddItemViewController.m
 //  DatabaseShoppingList
 //
 //  Created by Steve Baker on 12/28/09.
 //  Copyright Beepscore LLC 2009. All rights reserved.
 //
 
-#import "FirstViewController.h"
+#import "AddItemViewController.h"
 
 
-@implementation FirstViewController
+@implementation AddItemViewController
 
 
 /*

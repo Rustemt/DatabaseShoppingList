@@ -1,5 +1,5 @@
 //
-//  FirstViewController.h
+//  AddItemViewController.h
 //  DatabaseShoppingList
 //
 //  Created by Steve Baker on 12/28/09.
@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 
-@interface FirstViewController : UIViewController {
+@interface AddItemViewController : UIViewController {
 
 }
 
