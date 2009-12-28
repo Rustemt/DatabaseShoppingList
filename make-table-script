@@ -1,0 +1,26 @@
+BEGIN TRANSACTION;
+CREATE TABLE if not exists
+        shoppinglist (key INTEGER PRIMARY KEY,
+                           item TEXT,
+                           price DOUBLE,
+                           groupid INTEGER,
+                           dateadded DATE);
+insert into "shoppinglist" (item, price, groupid, dateadded)
+        values ("Pop Zero 12-pack", "3.99", 0, DATETIME('NOW'));
+insert into "shoppinglist" (item, price, groupid, dateadded)
+        values ("Mac Pro", "2499.99", 1, DATETIME('NOW'));
+insert into "shoppinglist" (item, price, groupid, dateadded)
+        values ("iPhone 3G", "199", 1, DATETIME('NOW'));
+insert into "shoppinglist" (item, price, groupid, dateadded)
+        values ("Potato chips", "2.49", 0, DATETIME('NOW'));
+insert into "shoppinglist" (item, price, groupid, dateadded)
+        values ("Frozen pizza", "3.75", 0, DATETIME('NOW'));
+insert into "shoppinglist" (item, price, groupid, dateadded)
+        values ("Final Cut keyboard", "169.95", 1, DATETIME('NOW'));
+insert into "shoppinglist" (item, price, groupid, dateadded)
+        values ("Mints", "0.98", 0, DATETIME('NOW'));
+insert into "shoppinglist" (item, price, groupid, dateadded)
+        values ("ADC select membership", "500", 1, DATETIME('NOW'));
+insert into "shoppinglist" (item, price, groupid, dateadded)
+        values ("iPhone individual membership", "99", 1, DATETIME('NOW'));
+COMMIT;
