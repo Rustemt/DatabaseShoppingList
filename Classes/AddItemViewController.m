@@ -8,6 +8,7 @@
 
 #import "AddItemViewController.h"
 #include <sqlite3.h>
+#import "DatabaseShoppingListAppDelegate.h"
 
 
 @implementation AddItemViewController
@@ -70,7 +71,62 @@
 }
 
 #pragma mark -
-- (IBAction)addShoppingListItem:(id)sender {
+- (IBAction) addShoppingListItem: (id) sender {
+	NSLog (@"addShoppingListItem");
+	
+	// sanity check - reject if either field empty price doesn't parse
+    //START:code.DatabaseShoppingList.openDatabaseForAdd
+	if (([itemNameField.text length] == 0) ||
+		([priceField.text length] == 0) ||
+		([priceField.text doubleValue] == 0.0))
+		return;
+	
+	sqlite3 *db;
+	int dbrc; // database return code
+	DatabaseShoppingListAppDelegate *appDelegate = (DatabaseShoppingListAppDelegate*)
+    [UIApplication sharedApplication].delegate;
+	const char* dbFilePathUTF8 = [appDelegate.dbFilePath UTF8String];
+	dbrc = sqlite3_open (dbFilePathUTF8, &db);
+	if (dbrc) {
+		NSLog (@"couldn't open db:");
+		return;
+	}
+    //END:code.DatabaseShoppingList.openDatabaseForAdd
+	NSLog (@"opened db");
+	
+	// add stuff
+	//START:code.DatabaseShoppingList.insertIntoDatabase
+	sqlite3_stmt *dbps; // database prepared statement
+	NSString *insertStatementNS = [NSString stringWithFormat:
+                                   @"insert into \"shoppinglist\"\
+                                   (item, price, groupid, dateadded)\
+                                   values (\"%@\", %@, %d, DATETIME('NOW'))",
+                                   itemNameField.text,
+                                   priceField.text,
+                                   [groupPicker selectedRowInComponent: 0]];
+	const char *insertStatement = [insertStatementNS UTF8String];
+	dbrc = sqlite3_prepare_v2 (db, insertStatement, -1, &dbps, NULL);
+    if (dbrc) {
+		NSLog (@"possible error preparing db for insert");
+		return;
+	}    
+	dbrc = sqlite3_step (dbps);
+    if (dbrc) {
+		NSLog (@"possible error inserting in db:");
+		return;
+	}
+	//END:code.DatabaseShoppingList.insertIntoDatabase
+	//START:code.DatabaseShoppingList.insertIntoDatabaseCleanup
+	// done with the db.  finalize the statement and close
+	sqlite3_finalize (dbps);
+	sqlite3_close(db);
+	//END:code.DatabaseShoppingList.insertIntoDatabaseCleanup
+	
+	// clear fields and indicate success on status line
+	statusLabel.text = [[NSString alloc] initWithFormat: @"Added %@", itemNameField.text];
+	statusLabel.hidden = NO;
+	itemNameField.text = @"";
+	priceField.text = @"";
     
 }
 
@@ -106,15 +162,15 @@
  */
 
 - (void)didReceiveMemoryWarning {
-	// Releases the view if it doesn't have a superview.
+    // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-	
-	// Release any cached data, images, etc that aren't in use.
+    
+    // Release any cached data, images, etc that aren't in use.
 }
 
 - (void)viewDidUnload {
-	// Release any retained subviews of the main view.
-	// e.g. self.myOutlet = nil;
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
 }
 
 

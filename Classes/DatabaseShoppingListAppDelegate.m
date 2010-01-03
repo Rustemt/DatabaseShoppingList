@@ -65,7 +65,6 @@ NSString *DATABASE_FILE_NAME = @"shopping.db";
 }
 
 
-
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
 
 	// copy the database from the bundle if necessary
