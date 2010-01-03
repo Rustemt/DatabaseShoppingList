@@ -7,146 +7,172 @@
 //
 
 #import "ListByPriceViewController.h"
+#import "DatabaseShoppingListAppDelegate.h"
 #include <sqlite3.h>
 
 @implementation ListByPriceViewController
+@synthesize nibLoadedTableCell;
 
-/*
-- (id)initWithStyle:(UITableViewStyle)style {
-    // Override initWithStyle: if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
-    if (self = [super initWithStyle:style]) {
-    }
-    return self;
-}
-*/
+// keys for key-value pair NSDicts in the shoppingListItems
+NSString *PRIMARY_ID_KEY = @"primaryid";
+NSString *ITEM_KEY = @"item";
+NSString *PRICE_KEY = @"price";
+NSString *GROUP_ID_KEY = @"groupid";
+NSString *DATE_ADDED_KEY = @"dateadded";
 
-/*
+// group names
+NSString *GROUP_NAMES[] = {@"Groceries", @"Tech"};
+
+// contents loaded from db: each cell is an NSDictionary of key-val pairs
+NSMutableArray *shoppingListItems;
+
+NSNumberFormatter *priceFormatter;
+NSDateFormatter *dateFormatter;
+
+
 - (void)viewDidLoad {
-    [super viewDidLoad];
+	[super viewDidLoad];
+	// set up price formatter
+	if (!priceFormatter) {
+		priceFormatter = [[NSNumberFormatter alloc] init];
+		[priceFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+	}
+	// set up date formatter to parse dates from db strings
+	if (! dateFormatter) {
+		// [NSDateFormatter setDefaultFormatterBehavior:  NSDateFormatterBehavior10_4]; // unneccessary - osx 10.4 behavior is the only supported behavior on iPhoneOS
+		//START:code.DatabaseShoppingList.setupDateFormatter
+		dateFormatter = [[NSDateFormatter alloc] init];
+		[dateFormatter setTimeZone: [NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+		[dateFormatter setDateFormat: @"yyyy-MM-dd HH:mm:ss"];
+		//END:code.DatabaseShoppingList.setupDateFormatter
+	}
+}
 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-}
-*/
-
-/*
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-}
-*/
-/*
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-}
-*/
-/*
-- (void)viewWillDisappear:(BOOL)animated {
-	[super viewWillDisappear:animated];
-}
-*/
-/*
-- (void)viewDidDisappear:(BOOL)animated {
-	[super viewDidDisappear:animated];
-}
-*/
-
-/*
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-*/
-
-- (void)didReceiveMemoryWarning {
-	// Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
+/* Loads all rows from database into shoppingListItems array
+ */
+- (void) loadDataFromDb {
+	NSLog (@"loadDataFromDb");
+    
+	sqlite3 *db;
+	int dbrc; // database return code
+	DatabaseShoppingListAppDelegate *appDelegate = (DatabaseShoppingListAppDelegate*)
+    [UIApplication sharedApplication].delegate;
+	const char* dbFilePathUTF8 = [appDelegate.dbFilePath UTF8String];
+	dbrc = sqlite3_open (dbFilePathUTF8, &db);
+	if (dbrc) {
+		NSLog (@"couldn't open db:");
+		return;
+	}
+	NSLog (@"opened db");
 	
-	// Release any cached data, images, etc that aren't in use.
+	// select stuff
+	sqlite3_stmt *dbps; // database prepared statement
+	//START:code.DatabaseShoppingList.readFromDatabaseQueryStatement
+	NSString *queryStatementNS =
+	@"select key, item, price, groupid, dateadded\
+	from shoppinglist order by price";
+	//END:code.DatabaseShoppingList.readFromDatabaseQueryStatement
+	const char *queryStatement = [queryStatementNS UTF8String];
+	dbrc = sqlite3_prepare_v2 (db, queryStatement, -1, &dbps, NULL);
+    if (dbrc) {
+		NSLog (@"possible error preparing db for read");
+		return;
+	}    
+	NSLog (@"prepared statement");
+	
+	// at this point, clear out any existing table model array and prepare new one
+	[shoppingListItems release];
+	shoppingListItems = [[NSMutableArray alloc] initWithCapacity: 100]; // arbitrary capacity
+	
+	// repeatedly execute the prepared statement until we're out of results
+	//START:code.DatabaseShoppingList.readFromDatabaseResults
+	while ((dbrc = sqlite3_step (dbps)) == SQLITE_ROW) {
+		int primaryKeyValueI = sqlite3_column_int(dbps, 0);
+		NSNumber *primaryKeyValue = [[NSNumber alloc]
+                                     initWithInt: primaryKeyValueI];
+		NSString *itemValue = [[NSString alloc]
+                               initWithUTF8String: (char*) sqlite3_column_text (dbps, 1)];
+		double priceValueD = sqlite3_column_double (dbps, 2);
+		NSNumber *priceValue = [[NSNumber alloc]
+                                initWithDouble: priceValueD];
+		int groupValueI = sqlite3_column_int(dbps, 3);
+		NSNumber *groupValue = [[NSNumber alloc]
+                                initWithInt: groupValueI];
+		NSString *dateValueS = [[NSString alloc] 
+                                initWithUTF8String: (char*) sqlite3_column_text (dbps, 4)];
+		NSDate *dateValue = [dateFormatter dateFromString: dateValueS];
+		
+		NSMutableDictionary *rowDict =
+        [[NSMutableDictionary alloc] initWithCapacity: 5];
+		[rowDict setObject: primaryKeyValue forKey: PRIMARY_ID_KEY];
+		[rowDict setObject: itemValue forKey: ITEM_KEY];
+		[rowDict setObject: priceValue forKey: PRICE_KEY];
+		[rowDict setObject: groupValue forKey: GROUP_ID_KEY];
+		[rowDict setObject: dateValue forKey: DATE_ADDED_KEY];
+		[shoppingListItems addObject: rowDict];
+		// release our interest in all the value items
+		[dateValueS release];
+		[primaryKeyValue release];
+		[itemValue release];
+		[priceValue release];
+		[groupValue release];
+		[rowDict release];
+	}
+	//END:code.DatabaseShoppingList.readFromDatabaseResults
+    
+	// done with the db.  finalize the statement and close
+	sqlite3_finalize (dbps);
+	sqlite3_close(db);
 }
 
-- (void)viewDidUnload {
-	// Release any retained subviews of the main view.
-	// e.g. self.myOutlet = nil;
+- (void)viewWillAppear:(BOOL)animated {
+	[self loadDataFromDb];
+	[super viewWillAppear:animated];
+	[self.tableView reloadData]; 
 }
 
 
 #pragma mark Table view methods
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
-
-
-// Customize the number of rows in the table view.
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 0;
-}
-
-
-// Customize the appearance of table view cells.
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    static NSString *CellIdentifier = @"Cell";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-    }
-    
-    // Set up the cell...
+- (UITableViewCell *)tableView:(UITableView *)tableViewParam cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	
-    return cell;
+	UITableViewCell *myCell = (UITableViewCell*) [self.tableView dequeueReusableCellWithIdentifier:@"listByPriceTableCell"];
+	if (myCell == nil) {
+		[[NSBundle mainBundle] loadNibNamed:@"ShoppingListTableViewCell" owner:self options:NULL];
+		myCell = nibLoadedTableCell;
+	} 
+    //START:code.DatabaseShoppingList.setcellcontents
+	UILabel *itemLabel = (UILabel*) [myCell viewWithTag:1];
+	UILabel *groupLabel = (UILabel*) [myCell viewWithTag:2];
+	UILabel *priceLabel = (UILabel*) [myCell viewWithTag:3];
+	NSDictionary *rowVals =
+    (NSDictionary*) [shoppingListItems objectAtIndex: indexPath.row];
+	NSString *itemName = (NSString*) [rowVals objectForKey: ITEM_KEY];
+	itemLabel.text = itemName;
+	int groupid = [(NSNumber*) [rowVals objectForKey: GROUP_ID_KEY] intValue];
+	groupLabel.text =  GROUP_NAMES [groupid];
+	NSNumber *price = (NSNumber*) [rowVals objectForKey: PRICE_KEY];
+	priceLabel.text =  [priceFormatter stringFromNumber: price];
+    //END:code.DatabaseShoppingList.setcellcontents
+	
+	return myCell;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	return [shoppingListItems count];
 }
 
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Navigation logic may go here. Create and push another view controller.
-	// AnotherViewController *anotherViewController = [[AnotherViewController alloc] initWithNibName:@"AnotherView" bundle:nil];
-	// [self.navigationController pushViewController:anotherViewController];
-	// [anotherViewController release];
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	return 1;
 }
-
 
 /*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+ 
+ */
+- (void)didReceiveMemoryWarning {
+	[super didReceiveMemoryWarning]; // Releases the view if it doesn't have a superview
 }
-*/
-
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
 
 - (void)dealloc {
     [super dealloc];
@@ -154,4 +180,3 @@
 
 
 @end
-

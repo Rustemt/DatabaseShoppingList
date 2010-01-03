@@ -10,7 +10,9 @@
 
 
 @interface ListByPriceViewController : UITableViewController {
+	UITableViewCell *nibLoadedTableCell;
 
 }
+@property (nonatomic, retain) IBOutlet UITableViewCell *nibLoadedTableCell;
 
 @end
