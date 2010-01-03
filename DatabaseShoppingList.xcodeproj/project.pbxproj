@@ -20,6 +20,7 @@
 		DE6A8A5010E96082000C3860 /* add.png in Resources */ = {isa = PBXBuildFile; fileRef = DE6A8A4F10E96082000C3860 /* add.png */; };
 		DEB026D910E9711600514F6F /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DEB026D810E9711600514F6F /* libsqlite3.dylib */; };
 		DEB026DB10E972BB00514F6F /* shopping.db in Resources */ = {isa = PBXBuildFile; fileRef = DEB026DA10E972BB00514F6F /* shopping.db */; };
+		DEE00BB410F07AE0009044D5 /* ShoppingListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DEE00BB310F07AE0009044D5 /* ShoppingListTableViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		DE6A8A4F10E96082000C3860 /* add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add.png; sourceTree = "<group>"; };
 		DEB026D810E9711600514F6F /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		DEB026DA10E972BB00514F6F /* shopping.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = shopping.db; sourceTree = "<group>"; };
+		DEE00BB310F07AE0009044D5 /* ShoppingListTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShoppingListTableViewCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				DEE00BB310F07AE0009044D5 /* ShoppingListTableViewCell.xib */,
 				DEB026DA10E972BB00514F6F /* shopping.db */,
 				DE6A8A4F10E96082000C3860 /* add.png */,
 				DE6A8A4D10E96076000C3860 /* listbyprice.png */,
@@ -172,6 +175,7 @@
 				DE6A8A4E10E96076000C3860 /* listbyprice.png in Resources */,
 				DE6A8A5010E96082000C3860 /* add.png in Resources */,
 				DEB026DB10E972BB00514F6F /* shopping.db in Resources */,
+				DEE00BB410F07AE0009044D5 /* ShoppingListTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
