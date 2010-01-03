@@ -106,15 +106,11 @@
                                    [groupPicker selectedRowInComponent: 0]];
 	const char *insertStatement = [insertStatementNS UTF8String];
 	dbrc = sqlite3_prepare_v2 (db, insertStatement, -1, &dbps, NULL);
-    if (dbrc) {
+    if (dbrc)
 		NSLog (@"possible error preparing db for insert");
-		return;
-	}    
 	dbrc = sqlite3_step (dbps);
-    if (dbrc) {
-		NSLog (@"possible error inserting in db:");
-		return;
-	}
+    if (dbrc)
+		NSLog (@"inserted in db.  dbrc != 0, possible error?");
 	//END:code.DatabaseShoppingList.insertIntoDatabase
 	//START:code.DatabaseShoppingList.insertIntoDatabaseCleanup
 	// done with the db.  finalize the statement and close
