@@ -94,8 +94,8 @@ NSString *DATABASE_FILE_NAME = @"shopping.db";
 
 
 - (void)dealloc {
-    [tabBarController release];
-    [window release];
+    [tabBarController release], tabBarController = nil;
+    [window release], window = nil;
     [super dealloc];
 }
 
