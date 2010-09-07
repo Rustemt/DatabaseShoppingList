@@ -107,6 +107,7 @@
 	// add stuff by inserting into database    
 	// dbps shorthand for database prepared statement
     sqlite3_stmt *dbps;
+    // DATETIME('NOW') returns UTC, not local time
 	NSString *insertStatementNS = [NSString stringWithFormat:
                                    @"insert into \"shoppinglist\"\
                                    (item, price, groupid, dateadded)\

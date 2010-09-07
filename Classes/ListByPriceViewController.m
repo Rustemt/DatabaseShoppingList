@@ -68,6 +68,8 @@ NSDateFormatter *dateFormatter;
 	// select stuff
 	sqlite3_stmt *dbps; // database prepared statement
 
+    // Fields will be returned in the order specified by the query statement.
+    // This order may be different from the database table column order.
 	NSString *queryStatementNS =
 	@"select key, item, price, groupid, dateadded\
 	from shoppinglist order by price";
@@ -89,7 +91,9 @@ NSDateFormatter *dateFormatter;
 	// repeatedly execute the prepared statement until we're out of results
 	while ((dbrc = sqlite3_step (dbps)) == SQLITE_ROW)
     {
-		int primaryKeyValueI = sqlite3_column_int(dbps, 0);
+		
+        // column index must match order used in the query statement used to select the row.
+        int primaryKeyValueI = sqlite3_column_int(dbps, 0);
 		NSNumber *primaryKeyValue = [[NSNumber alloc]
                                      initWithInt: primaryKeyValueI];
 		NSString *itemValue = [[NSString alloc]
