@@ -30,19 +30,20 @@ NSString *DATABASE_FILE_NAME = @"shopping.db";
 - (BOOL) initializeDb
 {
 	NSLog (@"initializeDB");
-	// look to see if DB is in known location (~/Documents/$DATABASE_FILE_NAME)    
-	//START:code.DatabaseShoppingList.findDocumentsDirectory
+    
+	// Find Documents directory
+	// Use Apple's preferred way to find the Documents directory.  Ref Dudney Ch 10 p 193    
 	NSArray *searchPaths =
-    NSSearchPathForDirectoriesInDomains
-    (NSDocumentDirectory, NSUserDomainMask, YES);
+    NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 	NSString *documentFolderPath = [searchPaths objectAtIndex: 0];
 	dbFilePath = [documentFolderPath 
                   stringByAppendingPathComponent:DATABASE_FILE_NAME];
+	NSLog (@"dbFilePath = %@", dbFilePath);
 	//END:code.DatabaseShoppingList.findDocumentsDirectory
     
 	[dbFilePath retain];
     
-	//START:code.DatabaseShoppingList.copyDatabaseFileToDocuments
+	//  Copy database file to documents directory
 	if (! [[NSFileManager defaultManager] fileExistsAtPath:dbFilePath])
     {
 		// didn't find db, need to copy
@@ -67,8 +68,6 @@ NSString *DATABASE_FILE_NAME = @"shopping.db";
 		}
 	}
 	return YES;
-	//END:code.DatabaseShoppingList.copyDatabaseFileToDocuments
-	NSLog (@"bottom of initializeDb");
 }
 
 
@@ -85,20 +84,6 @@ NSString *DATABASE_FILE_NAME = @"shopping.db";
     // Add the tab bar controller's current view as a subview of the window
     [window addSubview:tabBarController.view];
 }
-
-
-
-/*
-// Optional UITabBarControllerDelegate method
-- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
-}
-*/
-
-/*
-// Optional UITabBarControllerDelegate method
-- (void)tabBarController:(UITabBarController *)tabBarController didEndCustomizingViewControllers:(NSArray *)viewControllers changed:(BOOL)changed {
-}
-*/
 
 
 - (void)dealloc
