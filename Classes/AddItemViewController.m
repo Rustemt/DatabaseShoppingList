@@ -59,11 +59,11 @@
 
 #pragma mark -
 #pragma mark textField delegate methods.
-// optional method.  Dismiss keyboard when user presses Return
-// both textFields use this method
-// Ref Dudney sec 4.6 pg 67
+// Called when user presses keyboard "Return" or "Done" key
+// both textFields use this method. Ref Dudney sec 4.6 pg 67
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
+    // dismiss keyboard
     [textField resignFirstResponder];
     return YES;
 }
@@ -81,28 +81,32 @@
 	NSLog (@"addShoppingListItem");
 	
 	// sanity check - reject if either field empty price doesn't parse
-    // open database for add
-	if (([itemNameField.text length] == 0) ||
-		([priceField.text length] == 0) ||
-		([priceField.text doubleValue] == 0.0))
+	if ((0 == [itemNameField.text length] ) ||
+		(0 == [priceField.text length] ) ||
+		(0.00 == [priceField.text doubleValue] ))
 		return;
 	
+    // db is a pointer to a sqlite3 struct
 	sqlite3 *db;
 	int dbrc; // database return code
 	DatabaseShoppingListAppDelegate *appDelegate = (DatabaseShoppingListAppDelegate*)
     [UIApplication sharedApplication].delegate;
+    
+    // dbFilePathUTF8 is a pointer to a C string, will be terminated by a nul character
 	const char* dbFilePathUTF8 = [appDelegate.dbFilePath UTF8String];
     
+    // open database for add by passing address &db where we would like to get a pointer to sqlite3 struct
 	dbrc = sqlite3_open (dbFilePathUTF8, &db);
-	if (dbrc) {
+	if (dbrc)
+    {
 		NSLog (@"couldn't open db:");
 		return;
 	}
 	NSLog (@"opened db");
 	
-	// add stuff
-	// insert into database
-	sqlite3_stmt *dbps; // database prepared statement
+	// add stuff by inserting into database    
+	// dbps shorthand for database prepared statement
+    sqlite3_stmt *dbps;
 	NSString *insertStatementNS = [NSString stringWithFormat:
                                    @"insert into \"shoppinglist\"\
                                    (item, price, groupid, dateadded)\
