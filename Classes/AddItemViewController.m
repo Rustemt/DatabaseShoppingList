@@ -122,8 +122,7 @@
     dbrc = sqlite3_step (dbps);
     if (dbrc)
 		NSLog (@"inserted in db.  dbrc != 0, possible error?");
-	//END:code.DatabaseShoppingList.insertIntoDatabase
-	//START:code.DatabaseShoppingList.insertIntoDatabaseCleanup
+
 	// done with the db.  finalize the statement and close
 	sqlite3_finalize (dbps);
 	sqlite3_close(db);

@@ -19,13 +19,9 @@
 @synthesize tabBarController;
 @synthesize dbFilePath;
 
-
 NSString *DATABASE_RESOURCE_NAME = @"shopping";
 NSString *DATABASE_RESOURCE_TYPE = @"db";
 NSString *DATABASE_FILE_NAME = @"shopping.db";
-
-// NSString *dbFilePath;
-
 
 - (BOOL) initializeDb
 {
@@ -39,7 +35,6 @@ NSString *DATABASE_FILE_NAME = @"shopping.db";
 	dbFilePath = [documentFolderPath 
                   stringByAppendingPathComponent:DATABASE_FILE_NAME];
 	NSLog (@"dbFilePath = %@", dbFilePath);
-	//END:code.DatabaseShoppingList.findDocumentsDirectory
     
 	[dbFilePath retain];
     

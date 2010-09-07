@@ -81,12 +81,11 @@ NSDateFormatter *dateFormatter;
 	}    
 	NSLog (@"prepared statement");
 	
-	// at this point, clear out any existing table model array and prepare new one
+	// clear out any existing table model array and prepare new one
 	[shoppingListItems release];
 	shoppingListItems = [[NSMutableArray alloc] initWithCapacity: 100]; // arbitrary capacity
 	
 	// repeatedly execute the prepared statement until we're out of results
-	//START:code.DatabaseShoppingList.readFromDatabaseResults
 	while ((dbrc = sqlite3_step (dbps)) == SQLITE_ROW) {
 		int primaryKeyValueI = sqlite3_column_int(dbps, 0);
 		NSNumber *primaryKeyValue = [[NSNumber alloc]
@@ -119,7 +118,6 @@ NSDateFormatter *dateFormatter;
 		[groupValue release];
 		[rowDict release];
 	}
-	//END:code.DatabaseShoppingList.readFromDatabaseResults
     
 	// done with the db.  finalize the statement and close
 	sqlite3_finalize (dbps);
@@ -133,6 +131,7 @@ NSDateFormatter *dateFormatter;
 }
 
 
+#pragma mark -
 #pragma mark Table view methods
 
 - (UITableViewCell *)tableView:(UITableView *)tableViewParam cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -142,7 +141,7 @@ NSDateFormatter *dateFormatter;
 		[[NSBundle mainBundle] loadNibNamed:@"ShoppingListTableViewCell" owner:self options:NULL];
 		myCell = nibLoadedTableCell;
 	} 
-    //START:code.DatabaseShoppingList.setcellcontents
+    // set cell contents
 	UILabel *itemLabel = (UILabel*) [myCell viewWithTag:1];
 	UILabel *groupLabel = (UILabel*) [myCell viewWithTag:2];
 	UILabel *priceLabel = (UILabel*) [myCell viewWithTag:3];
@@ -154,7 +153,6 @@ NSDateFormatter *dateFormatter;
 	groupLabel.text =  GROUP_NAMES [groupid];
 	NSNumber *price = (NSNumber*) [rowVals objectForKey: PRICE_KEY];
 	priceLabel.text =  [priceFormatter stringFromNumber: price];
-    //END:code.DatabaseShoppingList.setcellcontents
 	
 	return myCell;
 }
@@ -164,20 +162,21 @@ NSDateFormatter *dateFormatter;
 }
 
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
 	return 1;
 }
 
-/*
- 
- */
-- (void)didReceiveMemoryWarning {
+#pragma mark -
+- (void)didReceiveMemoryWarning
+{
 	[super didReceiveMemoryWarning]; // Releases the view if it doesn't have a superview
 }
 
-- (void)dealloc {
+
+- (void)dealloc
+{
     [super dealloc];
 }
-
 
 @end
