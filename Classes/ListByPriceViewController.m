@@ -67,14 +67,14 @@ NSDateFormatter *dateFormatter;
 	
 	// select stuff
 	sqlite3_stmt *dbps; // database prepared statement
-
+    
     // Fields will be returned in the order specified by the query statement.
     // This order may be different from the database table column order.
 	NSString *queryStatementNS =
 	@"select key, item, price, groupid, dateadded\
 	from shoppinglist order by price";
 	const char *queryStatement = [queryStatementNS UTF8String];
-
+    
     // NOTE: use sqlite3_prepare_v2 not sqlite3_prepare.  See comments in sqlite3.h and Dudney p 194
 	dbrc = sqlite3_prepare_v2 (db, queryStatement, -1, &dbps, NULL);
     if (dbrc)
@@ -142,10 +142,16 @@ NSDateFormatter *dateFormatter;
 #pragma mark -
 #pragma mark Table view methods
 
-- (UITableViewCell *)tableView:(UITableView *)tableViewParam cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableViewParam 
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {	
-	UITableViewCell *myCell = (UITableViewCell*) [self.tableView dequeueReusableCellWithIdentifier:@"listByPriceTableCell"];
-	if (myCell == nil) {
+    UITableViewCell *myCell = (UITableViewCell*) 
+    [self.tableView dequeueReusableCellWithIdentifier:@"listByPriceTableCell"];
+	if (nil == myCell)
+    {
+        // the cell is customized using labels with tags
+        // alternatively, we could have customized by subclassing UITableViewCell
+        // ref Dudney Ch 5.7 p 98
 		[[NSBundle mainBundle] loadNibNamed:@"ShoppingListTableViewCell" owner:self options:NULL];
 		myCell = nibLoadedTableCell;
 	} 
