@@ -27,33 +27,40 @@ NSString *DATABASE_FILE_NAME = @"shopping.db";
 // NSString *dbFilePath;
 
 
-- (BOOL) initializeDb {
+- (BOOL) initializeDb
+{
 	NSLog (@"initializeDB");
-	// look to see if DB is in known location (~/Documents/$DATABASE_FILE_NAME)
+	// look to see if DB is in known location (~/Documents/$DATABASE_FILE_NAME)    
 	//START:code.DatabaseShoppingList.findDocumentsDirectory
 	NSArray *searchPaths =
     NSSearchPathForDirectoriesInDomains
     (NSDocumentDirectory, NSUserDomainMask, YES);
 	NSString *documentFolderPath = [searchPaths objectAtIndex: 0];
-	dbFilePath = [documentFolderPath stringByAppendingPathComponent:
-				  DATABASE_FILE_NAME];
+	dbFilePath = [documentFolderPath 
+                  stringByAppendingPathComponent:DATABASE_FILE_NAME];
 	//END:code.DatabaseShoppingList.findDocumentsDirectory
+    
 	[dbFilePath retain];
+    
 	//START:code.DatabaseShoppingList.copyDatabaseFileToDocuments
-	if (! [[NSFileManager defaultManager] fileExistsAtPath: dbFilePath]) {
+	if (! [[NSFileManager defaultManager] fileExistsAtPath:dbFilePath])
+    {
 		// didn't find db, need to copy
 		NSString *backupDbPath = [[NSBundle mainBundle]
                                   pathForResource:DATABASE_RESOURCE_NAME
                                   ofType:DATABASE_RESOURCE_TYPE];
-		if (backupDbPath == nil) {
+		if (nil == backupDbPath)
+        {
 			// couldn't find backup db to copy, bail
 			return NO;
-		} else {
+		} else
+        {
 			BOOL copiedBackupDb = [[NSFileManager defaultManager]
                                    copyItemAtPath:backupDbPath
                                    toPath:dbFilePath
                                    error:nil];
-			if (! copiedBackupDb) {
+			if (! copiedBackupDb)
+            {
 				// copying backup db failed, bail
 				return NO;
 			}
@@ -65,10 +72,11 @@ NSString *DATABASE_FILE_NAME = @"shopping.db";
 }
 
 
-- (void)applicationDidFinishLaunching:(UIApplication *)application {
-
+- (void)applicationDidFinishLaunching:(UIApplication *)application
+{
 	// copy the database from the bundle if necessary
-	if (! [self initializeDb]) {
+	if (! [self initializeDb])
+    {
 		// TODO: alert the user!
 		NSLog (@"couldn't init db");
 		return;
@@ -93,7 +101,8 @@ NSString *DATABASE_FILE_NAME = @"shopping.db";
 */
 
 
-- (void)dealloc {
+- (void)dealloc
+{
     [tabBarController release], tabBarController = nil;
     [window release], window = nil;
     [super dealloc];

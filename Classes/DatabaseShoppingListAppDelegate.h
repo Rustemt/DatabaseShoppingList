@@ -12,7 +12,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DatabaseShoppingListAppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate> {
+@interface DatabaseShoppingListAppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate>
+{
     UIWindow *window;
     UITabBarController *tabBarController;
     NSString *dbFilePath;
