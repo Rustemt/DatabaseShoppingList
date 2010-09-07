@@ -81,7 +81,7 @@
 	NSLog (@"addShoppingListItem");
 	
 	// sanity check - reject if either field empty price doesn't parse
-    //START:code.DatabaseShoppingList.openDatabaseForAdd
+    // open database for add
 	if (([itemNameField.text length] == 0) ||
 		([priceField.text length] == 0) ||
 		([priceField.text doubleValue] == 0.0))
@@ -92,16 +92,16 @@
 	DatabaseShoppingListAppDelegate *appDelegate = (DatabaseShoppingListAppDelegate*)
     [UIApplication sharedApplication].delegate;
 	const char* dbFilePathUTF8 = [appDelegate.dbFilePath UTF8String];
+    
 	dbrc = sqlite3_open (dbFilePathUTF8, &db);
 	if (dbrc) {
 		NSLog (@"couldn't open db:");
 		return;
 	}
-    //END:code.DatabaseShoppingList.openDatabaseForAdd
 	NSLog (@"opened db");
 	
 	// add stuff
-	//START:code.DatabaseShoppingList.insertIntoDatabase
+	// insert into database
 	sqlite3_stmt *dbps; // database prepared statement
 	NSString *insertStatementNS = [NSString stringWithFormat:
                                    @"insert into \"shoppinglist\"\
@@ -111,10 +111,15 @@
                                    priceField.text,
                                    [groupPicker selectedRowInComponent: 0]];
 	const char *insertStatement = [insertStatementNS UTF8String];
+    
+	// sqlite3_prepare_v2 prepares the statement
+    // NOTE: use sqlite3_prepare_v2 not sqlite3_prepare.  See comments in sqlite3.h and Dudney p 194
 	dbrc = sqlite3_prepare_v2 (db, insertStatement, -1, &dbps, NULL);
     if (dbrc)
 		NSLog (@"possible error preparing db for insert");
-	dbrc = sqlite3_step (dbps);
+    
+	// sqlite3_step executes the statement
+    dbrc = sqlite3_step (dbps);
     if (dbrc)
 		NSLog (@"inserted in db.  dbrc != 0, possible error?");
 	//END:code.DatabaseShoppingList.insertIntoDatabase
@@ -122,14 +127,12 @@
 	// done with the db.  finalize the statement and close
 	sqlite3_finalize (dbps);
 	sqlite3_close(db);
-	//END:code.DatabaseShoppingList.insertIntoDatabaseCleanup
 	
 	// clear fields and indicate success on status line
 	statusLabel.text = [[NSString alloc] initWithFormat: @"Added %@", itemNameField.text];
 	statusLabel.hidden = NO;
 	itemNameField.text = @"";
-	priceField.text = @"";
-    
+	priceField.text = @"";    
 }
 
 

@@ -73,6 +73,7 @@ NSDateFormatter *dateFormatter;
 	from shoppinglist order by price";
 	//END:code.DatabaseShoppingList.readFromDatabaseQueryStatement
 	const char *queryStatement = [queryStatementNS UTF8String];
+    // NOTE: use sqlite3_prepare_v2 not sqlite3_prepare.  See comments in sqlite3.h and Dudney p 194
 	dbrc = sqlite3_prepare_v2 (db, queryStatement, -1, &dbps, NULL);
     if (dbrc) {
 		NSLog (@"possible error preparing db for read");
