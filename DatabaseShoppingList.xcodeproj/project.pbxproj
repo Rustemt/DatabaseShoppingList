@@ -226,12 +226,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Steve Baker (HZFYVQ6Y67)";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				SDKROOT = iphoneos3.1.2;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "72B46ED4-4A4B-4312-82CF-AB67E4F806F6";
+				SDKROOT = iphoneos4.0;
 			};
 			name = Debug;
 		};
@@ -239,12 +240,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Steve Baker (HZFYVQ6Y67)";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				SDKROOT = iphoneos3.1.2;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "72B46ED4-4A4B-4312-82CF-AB67E4F806F6";
+				SDKROOT = iphoneos4.0;
 			};
 			name = Release;
 		};
